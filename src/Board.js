@@ -1,76 +1,72 @@
 import { useState } from 'react'
 import Square from './Square.js'
 
-const board = [...Array(34).keys()]
+const board = [...Array(10).keys()]
 const filled = 'black'
 const unfilled = 'white'
 
 export default function Board() {
-  const [allState, setAllState] = useState({
-    colors: Array(board.length * board.length).fill(unfilled),
+  const [state, setState] = useState({
+    colors: Array(board.length).fill(Array(board.length).fill(unfilled)),
     startSquare: null,
     endSquare: null,
     drawColor: filled
   })
 
-  const handleSquareClick = (i) => 
-    setAllState(prev => {
-      const color = (prev.colors[i] === unfilled) ? filled : unfilled
-      const squaresSlice = [...prev.colors]
-      squaresSlice[i] = color
-      return {startSquare: i, endSquare: i, drawColor: color, colors: squaresSlice}
+  const handleSquareClick = (row, column) => 
+    setState(({colors}) => {
+      const color = (colors[row][column] === unfilled) ? filled : unfilled
+      const painted = paintLine(colors, [row, column], [row, column], color)
+      return {startSquare: [row, column], endSquare: [row, column], drawColor: color, colors: painted}
     })
 
-  // TODO: If you move the cursor fast enough you can miss squares.
-  // Need to take into account the previous end square.
-  const handleSquareHover = (i) =>
-    setAllState(state => {
-      const {startSquare, endSquare, colors, drawColor} = state
+  const handleSquareHover = (row, column) =>
+    setState(state => {
+      const {colors, startSquare, endSquare, drawColor} = state
 
       if (startSquare !== null) {
-        const [hoveredRow, hoveredColumn] = squareIndexToRowColumn(i)
-        const [startRow, startColumn] = squareIndexToRowColumn(startSquare)
-        const [endRow, endColumn] = squareIndexToRowColumn(endSquare)
+        const [startRow, startColumn] = startSquare
+        const [endRow, endColumn] = endSquare
 
-        if (startRow === endRow && hoveredColumn !== endColumn) {
-          const i = squareRowColumnToIndex(endRow, hoveredColumn)
-          if (colors[i] !== drawColor) return colorSquare(state, i)
-        } else if (startColumn === endColumn && hoveredRow !== endRow) {
-          const i = squareRowColumnToIndex(hoveredRow, endColumn)
-          if (colors[i] !== drawColor) return colorSquare(state, i)
+        if (startRow === endRow && column !== endColumn && colors[endRow][column] !== drawColor) {
+          const painted = paintLine(colors, endSquare, [endRow, column], drawColor)
+          return {...state, endSquare: [endRow, column], colors: painted}
+        } else if (startColumn === endColumn && row !== endRow && colors[row][endColumn] !== drawColor) {
+          const painted = paintLine(colors, endSquare, [row, endColumn], drawColor)
+          return {...state, endSquare: [row, endColumn], colors: painted}
         }
       }
       return state
     })
 
-  const colorSquare = (state, i) => {
-    const {colors} = state
-    const color = (colors[i] === unfilled) ? filled : unfilled
-    const squaresSlice = [...colors]
-    squaresSlice[i] = color
-    return {...state, endSquare: i, colors: squaresSlice}
+  // I feel like this could be simplified
+  const paintLine = (colors, [startRow, startColumn], [endRow, endColumn], color) => {
+    const squaresSlice = colors.map(row => [...row])
+
+    if (startRow > endRow) [startRow, endRow] = [endRow, startRow]
+    if (startColumn > endColumn) [startColumn, endColumn] = [endColumn, startColumn]
+
+    if (startRow === endRow) {
+      for (let i = startColumn; i <= endColumn; i++) {
+        squaresSlice[startRow][i] = color
+      }
+    } else if (startColumn === endColumn && startRow <= endRow) {
+      for (let i = startRow; i <= endRow; i++) {
+        squaresSlice[i][startColumn] = color
+      }
+    } 
+    return squaresSlice
   }
 
-  const handleMouseUp = () => setAllState(prev => ({...prev, startSquare: null, endSquare: null}))
-
-  const squareRowColumnToIndex = (row, column) => row * board.length + column
-
-  const squareIndexToRowColumn = (i) => {
-    const row = Math.floor(i / board.length)
-    const column = i % board.length
-    return [row, column]
-  }
+  const stopPainting = () => setState(state => ({...state, startSquare: null, endSquare: null}))
 
   const renderSquare = (row, column) => {
-    const i = squareRowColumnToIndex(row, column)
-
     return (
       <Square
-        key={i}
-        color={allState.colors[i]}
-        onMouseDown={() => handleSquareClick(i)}
-        onMouseOver={() => handleSquareHover(i)}
-        onMouseUp={() => handleMouseUp()}
+        key={row * board.length + column}
+        color={state.colors[row][column]}
+        onMouseDown={() => handleSquareClick(row, column)}
+        onMouseOver={() => handleSquareHover(row, column)}
       />
     )
   }
@@ -84,7 +80,8 @@ export default function Board() {
   return (
     <div
       className="game-board"
-      onMouseUp={handleMouseUp}
+      onMouseUp={stopPainting}
+      onMouseLeave={stopPainting}
     >
       {grid}
     </div>
