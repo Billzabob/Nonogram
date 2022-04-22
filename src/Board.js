@@ -1,56 +1,57 @@
 import { useState } from 'react'
 import Square from './Square.js'
 
-const board = [...Array(10).keys()]
-const filled = 'red'
-const unfilled = 'grey'
+const board = [...Array(34).keys()]
+const filled = 'black'
+const unfilled = 'white'
 
-export default function Board(props) {
-  const [squareColors, setSquareColors] = useState(Array(board.length * board.length).fill(unfilled))
-  const [startSquare, setStartSquare] = useState(null)
-  const [endSquare, setEndSquare] = useState(null)
-  const [drawColor, setDrawColor] = useState(filled)
+export default function Board() {
+  const [allState, setAllState] = useState({
+    colors: Array(board.length * board.length).fill(unfilled),
+    startSquare: null,
+    endSquare: null,
+    drawColor: filled
+  })
 
-  const handleSquareClick = (i) => {
-    const color = (squareColors[i] === unfilled) ? filled : unfilled
-    setDrawColor(color)
-    fillSquare(i, color)
-    setStartSquare(i)
-    setEndSquare(i)
-  }
+  const handleSquareClick = (i) => 
+    setAllState(prev => {
+      const color = (prev.colors[i] === unfilled) ? filled : unfilled
+      const squaresSlice = [...prev.colors]
+      squaresSlice[i] = color
+      return {startSquare: i, endSquare: i, drawColor: color, colors: squaresSlice}
+    })
 
-  const handleSquareHover = (i) => {
-    if (startSquare !== null) {
-      const [hoveredRow, hoveredColumn] = squareIndexToRowColumn(i)
-      const [startRow, startColumn] = squareIndexToRowColumn(startSquare)
-      const [endRow, endColumn] = squareIndexToRowColumn(endSquare)
+  // TODO: If you move the cursor fast enough you can miss squares.
+  // Need to take into account the previous end square.
+  const handleSquareHover = (i) =>
+    setAllState(state => {
+      const {startSquare, endSquare, colors, drawColor} = state
 
-      if (startRow === endRow && hoveredColumn !== endColumn) {
-        const i = squareRowColumnToIndex(endRow, hoveredColumn)
-        if (squareColors[i] !== drawColor) {
-          setEndSquare(i)
-          fillSquare(i)
-        }
-      } else if (startColumn === endColumn && hoveredRow !== endRow) {
-        const i = squareRowColumnToIndex(hoveredRow, endColumn)
-        if (squareColors[i] !== drawColor) {
-          setEndSquare(i)
-          fillSquare(i)
+      if (startSquare !== null) {
+        const [hoveredRow, hoveredColumn] = squareIndexToRowColumn(i)
+        const [startRow, startColumn] = squareIndexToRowColumn(startSquare)
+        const [endRow, endColumn] = squareIndexToRowColumn(endSquare)
+
+        if (startRow === endRow && hoveredColumn !== endColumn) {
+          const i = squareRowColumnToIndex(endRow, hoveredColumn)
+          if (colors[i] !== drawColor) return colorSquare(state, i)
+        } else if (startColumn === endColumn && hoveredRow !== endRow) {
+          const i = squareRowColumnToIndex(hoveredRow, endColumn)
+          if (colors[i] !== drawColor) return colorSquare(state, i)
         }
       }
-    }
+      return state
+    })
+
+  const colorSquare = (state, i) => {
+    const {colors} = state
+    const color = (colors[i] === unfilled) ? filled : unfilled
+    const squaresSlice = [...colors]
+    squaresSlice[i] = color
+    return {...state, endSquare: i, colors: squaresSlice}
   }
 
-  const handleMouseUp = () => {
-    setStartSquare(null)
-    setEndSquare(null)
-  }
-
-  const fillSquare = (i, color) => {
-    const squaresSlice = squareColors.slice()
-    squaresSlice[i] = color || drawColor
-    setSquareColors(squaresSlice)
-  }
+  const handleMouseUp = () => setAllState(prev => ({...prev, startSquare: null, endSquare: null}))
 
   const squareRowColumnToIndex = (row, column) => row * board.length + column
 
@@ -65,12 +66,11 @@ export default function Board(props) {
 
     return (
       <Square
-        row={row}
-        column={column}
         key={i}
-        color={squareColors[i]}
+        color={allState.colors[i]}
         onMouseDown={() => handleSquareClick(i)}
         onMouseOver={() => handleSquareHover(i)}
+        onMouseUp={() => handleMouseUp()}
       />
     )
   }

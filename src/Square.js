@@ -1,6 +1,8 @@
-export default function Square({ row, column, color, ...rest}) {
-  console.log(`${row}, ${column}`)
+import React from 'react'
 
+const areEqual = (prev, next) => prev.color === next.color
+
+export default React.memo(function Square({ color, ...rest}) {
   return (
     <button
       className="square"
@@ -8,4 +10,4 @@ export default function Square({ row, column, color, ...rest}) {
       {...rest}
     />
   )
-}
+}, areEqual)
