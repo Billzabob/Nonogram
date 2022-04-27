@@ -1,26 +1,27 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Board from './Board.js'
 
-const board = [...Array(15).keys()]
+const boardWidth = 15
+const boardHeight = boardWidth
 const unfilled = 'white'
 
 export default function GameBoard({fillColor}) {
   const [state, setState] = useState({
-    colors: Array(board.length).fill(Array(board.length).fill(unfilled)),
+    colors: Array(boardHeight).fill(Array(boardWidth).fill(unfilled)),
     startSquare: null,
     endSquare: null,
     drawColor: fillColor
   })
 
-  function handleSquareClick(row, column) {
+  const handleSquareClick = useCallback((row, column) => {
     setState(({colors}) => {
-      const color = (colors[row][column] === unfilled) ? fillColor : unfilled
+      const color = (colors[row][column] === fillColor) ? unfilled : fillColor
       const painted = paintLine(colors, [row, column], [row, column], color)
       return {startSquare: [row, column], endSquare: [row, column], drawColor: color, colors: painted}
     })
-  }
+  }, [fillColor])
 
-  function handleSquareHover(row, column) {
+  const handleSquareHover = useCallback((row, column) => {
     setState(state => {
       const {colors, startSquare, endSquare, drawColor} = state
 
@@ -38,7 +39,7 @@ export default function GameBoard({fillColor}) {
       }
       return state
     })
-  }
+  }, [])
 
   function paintLine(colors, [startRow, startColumn], [endRow, endColumn], color) {
     return colors.map((columns, row) => columns.map((oldColor, column) => {

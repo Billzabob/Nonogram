@@ -7,15 +7,17 @@ export default function Board({colors, handleSquareClick, handleSquareHover}) {
       <Square
         key={row * colors.length + column}
         color={colors[row][column]}
-        onMouseDown={() => handleSquareClick(row, column)}
-        onMouseOver={() => handleSquareHover(row, column)}
+        row={row}
+        column={column}
+        handleSquareClick={handleSquareClick}
+        handleSquareHover={handleSquareHover}
       />
     )
   }
 
   const grid = colors.map((columns, row) =>
     <div className="board-row" key={row}>
-      {columns.map((color, column) => renderSquare(row, column))}
+      {columns.map((_color, column) => renderSquare(row, column))}
     </div>
   )
 

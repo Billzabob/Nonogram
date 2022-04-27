@@ -1,13 +1,12 @@
 import React from 'react'
 
-const areEqual = (prev, next) => prev.color === next.color
-
-export default React.memo(function Square({ color, ...rest}) {
+export default React.memo(function Square({ color, row, column, handleSquareClick, handleSquareHover}) {
   return (
     <button
       className="square"
       style={{ background: color }}
-      {...rest}
+      onMouseDown={() => handleSquareClick(row, column)}
+      onMouseOver={() => handleSquareHover(row, column)}
     />
   )
-}, areEqual)
+})

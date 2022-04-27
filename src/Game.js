@@ -6,12 +6,12 @@ export default function Game() {
   const [fillColor, setFillColor] = useState('black')
 
   return (
-    <div>
+    <div className='game'>
       <GameBoard
         fillColor={fillColor}
       />
       <ColorPicker
-        pickColor={color => setFillColor(color)}
+        pickColor={setFillColor}
       />
     </div>
   )
