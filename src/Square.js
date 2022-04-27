@@ -1,6 +1,5 @@
-import React from 'react'
 
-export default React.memo(function Square({ color, row, column, handleSquareClick, handleSquareHover}) {
+export default function Square({ color, row, column, handleSquareClick, handleSquareHover}) {
   return (
     <button
       className="square"
@@ -9,4 +8,4 @@ export default React.memo(function Square({ color, row, column, handleSquareClic
       onMouseOver={() => handleSquareHover(row, column)}
     />
   )
-})
+}

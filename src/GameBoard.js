@@ -1,45 +1,36 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import Board from './Board.js'
 
-const boardWidth = 15
-const boardHeight = boardWidth
-const unfilled = 'white'
+export default function GameBoard({fillColor, colors, setColors, unfilled}) {
+  const [startSquare, setStartSquare] = useState(null)
+  const [endSquare, setEndSquare] = useState(null)
+  const [drawColor, setDrawColor] = useState(fillColor)
 
-export default function GameBoard({fillColor}) {
-  const [state, setState] = useState({
-    colors: Array(boardHeight).fill(Array(boardWidth).fill(unfilled)),
-    startSquare: null,
-    endSquare: null,
-    drawColor: fillColor
-  })
+  function handleSquareClick(row, column) {
+    const color = (colors[row][column] === fillColor) ? unfilled : fillColor
+    const painted = paintLine(colors, [row, column], [row, column], color)
+    setColors(painted)
+    setStartSquare([row, column])
+    setEndSquare([row, column])
+    setDrawColor(color)
+  }
 
-  const handleSquareClick = useCallback((row, column) => {
-    setState(({colors}) => {
-      const color = (colors[row][column] === fillColor) ? unfilled : fillColor
-      const painted = paintLine(colors, [row, column], [row, column], color)
-      return {startSquare: [row, column], endSquare: [row, column], drawColor: color, colors: painted}
-    })
-  }, [fillColor])
+  function handleSquareHover(row, column) {
+    if (startSquare !== null) {
+      const [startRow, startColumn] = startSquare
+      const [endRow, endColumn] = endSquare
 
-  const handleSquareHover = useCallback((row, column) => {
-    setState(state => {
-      const {colors, startSquare, endSquare, drawColor} = state
-
-      if (startSquare !== null) {
-        const [startRow, startColumn] = startSquare
-        const [endRow, endColumn] = endSquare
-
-        if (startRow === endRow && column !== endColumn && colors[endRow][column] !== drawColor) {
-          const painted = paintLine(colors, endSquare, [endRow, column], drawColor)
-          return {...state, endSquare: [endRow, column], colors: painted}
-        } else if (startColumn === endColumn && row !== endRow && colors[row][endColumn] !== drawColor) {
-          const painted = paintLine(colors, endSquare, [row, endColumn], drawColor)
-          return {...state, endSquare: [row, endColumn], colors: painted}
-        }
+      if (startRow === endRow && column !== endColumn && colors[endRow][column] !== drawColor) {
+        const painted = paintLine(colors, endSquare, [endRow, column], drawColor)
+        setColors(painted)
+        setEndSquare([endRow, column])
+      } else if (startColumn === endColumn && row !== endRow && colors[row][endColumn] !== drawColor) {
+        const painted = paintLine(colors, endSquare, [row, endColumn], drawColor)
+        setColors(painted)
+        setEndSquare([row, endColumn])
       }
-      return state
-    })
-  }, [])
+    }
+  }
 
   function paintLine(colors, [startRow, startColumn], [endRow, endColumn], color) {
     return colors.map((columns, row) => columns.map((oldColor, column) => {
@@ -53,7 +44,8 @@ export default function GameBoard({fillColor}) {
   }
 
   function stopPainting() {
-    setState(state => ({...state, startSquare: null, endSquare: null}))
+    setStartSquare(null)
+    setEndSquare(null)
   }
 
   return (
@@ -62,7 +54,7 @@ export default function GameBoard({fillColor}) {
       onMouseUp={stopPainting}
     >
       <Board
-        colors={state.colors}
+        colors={colors}
         handleSquareClick={handleSquareClick}
         handleSquareHover={handleSquareHover}
       />
