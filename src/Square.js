@@ -1,11 +1,11 @@
-export default function Square({ row, column, color, ...rest}) {
-  console.log(`${row}, ${column}`)
 
+export default function Square({ color, row, column, handleSquareClick, handleSquareHover}) {
   return (
     <button
       className="square"
       style={{ background: color }}
-      {...rest}
+      onMouseDown={() => handleSquareClick(row, column)}
+      onMouseOver={() => handleSquareHover(row, column)}
     />
   )
 }
