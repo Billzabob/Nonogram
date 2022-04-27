@@ -1,13 +1,18 @@
-import Board from './Board.js'
+import { useState } from 'react'
+import GameBoard from './GameBoard.js'
+import ColorPicker from './ColorPicker.js'
 
-export default function Game(_props) {
+export default function Game() {
+  const [fillColor, setFillColor] = useState('black')
+
   return (
-    <div className="game">
-      <Board />
-      <div className="game-info">
-        <div>{/* status */}</div>
-        <ol>{/* TODO */}</ol>
-      </div>
+    <div>
+      <GameBoard
+        fillColor={fillColor}
+      />
+      <ColorPicker
+        pickColor={color => setFillColor(color)}
+      />
     </div>
   )
 }
