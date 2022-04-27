@@ -1,25 +1,43 @@
 import { useState } from 'react'
 import GameBoard from './GameBoard.js'
 import ColorPicker from './ColorPicker.js'
+import Undo from './Undo.js'
 
 const boardWidth = 15
 const boardHeight = boardWidth
-const unfilled = 'white'
+const blankColor = 'white'
 
 export default function Game() {
-  const [fillColor, setFillColor] = useState('black')
-  const [colors, setColors] = useState(Array(boardHeight).fill(Array(boardWidth).fill(unfilled)))
+  const [color, setColor] = useState('black')
+  const [board, setBoard] = useState([Array(boardHeight).fill(Array(boardWidth).fill(blankColor))])
+
+  function updateMove(color) {
+    setBoard(([, ...rest]) => [color, ...rest])
+  }
+
+  function startMove(color) {
+    setBoard(old => [color, ...old])
+  }
+
+  function undo() {
+    setBoard(([, ...rest]) => rest)
+  }
 
   return (
     <div className='game'>
       <GameBoard
-        fillColor={fillColor}
-        colors={colors}
-        setColors={setColors}
-        unfilled={unfilled}
+        color={color}
+        board={board[0]}
+        updateMove={updateMove}
+        startMove={startMove}
+        blankColor={blankColor}
       />
       <ColorPicker
-        pickColor={setFillColor}
+        setColor={setColor}
+      />
+      <Undo
+        onClick={undo}
+        disabled={board.length <= 1}
       />
     </div>
   )

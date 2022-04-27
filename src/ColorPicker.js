@@ -1,9 +1,9 @@
-export default function Game({pickColor}) {
+export default function Game({setColor}) {
   return (
     <div>
-      <button onClick={() => pickColor('black')}>Black</button>
-      <button onClick={() => pickColor('red')}>Red</button>
-      <button onClick={() => pickColor('blue')}>Blue</button>
+      <button onClick={() => setColor('black')}>Black</button>
+      <button onClick={() => setColor('red')}>Red</button>
+      <button onClick={() => setColor('blue')}>Blue</button>
     </div>
   )
 }

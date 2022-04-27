@@ -1,18 +1,18 @@
 import { useState } from 'react'
 import Board from './Board.js'
 
-export default function GameBoard({fillColor, colors, setColors, unfilled}) {
+export default function GameBoard({color, board, updateMove, blankColor, startMove}) {
   const [startSquare, setStartSquare] = useState(null)
   const [endSquare, setEndSquare] = useState(null)
-  const [drawColor, setDrawColor] = useState(fillColor)
+  const [drawColor, setDrawColor] = useState(color)
 
   function handleSquareClick(row, column) {
-    const color = (colors[row][column] === fillColor) ? unfilled : fillColor
-    const painted = paintLine(colors, [row, column], [row, column], color)
-    setColors(painted)
+    const paintColor = (board[row][column] === color) ? blankColor : color
+    const painted = paintLine(board, [row, column], [row, column], paintColor)
+    startMove(painted)
     setStartSquare([row, column])
     setEndSquare([row, column])
-    setDrawColor(color)
+    setDrawColor(paintColor)
   }
 
   function handleSquareHover(row, column) {
@@ -20,20 +20,20 @@ export default function GameBoard({fillColor, colors, setColors, unfilled}) {
       const [startRow, startColumn] = startSquare
       const [endRow, endColumn] = endSquare
 
-      if (startRow === endRow && column !== endColumn && colors[endRow][column] !== drawColor) {
-        const painted = paintLine(colors, endSquare, [endRow, column], drawColor)
-        setColors(painted)
+      if (startRow === endRow && column !== endColumn && board[endRow][column] !== drawColor) {
+        const painted = paintLine(board, endSquare, [endRow, column], drawColor)
+        updateMove(painted)
         setEndSquare([endRow, column])
-      } else if (startColumn === endColumn && row !== endRow && colors[row][endColumn] !== drawColor) {
-        const painted = paintLine(colors, endSquare, [row, endColumn], drawColor)
-        setColors(painted)
+      } else if (startColumn === endColumn && row !== endRow && board[row][endColumn] !== drawColor) {
+        const painted = paintLine(board, endSquare, [row, endColumn], drawColor)
+        updateMove(painted)
         setEndSquare([row, endColumn])
       }
     }
   }
 
-  function paintLine(colors, [startRow, startColumn], [endRow, endColumn], color) {
-    return colors.map((columns, row) => columns.map((oldColor, column) => {
+  function paintLine(board, [startRow, startColumn], [endRow, endColumn], color) {
+    return board.map((columns, row) => columns.map((oldColor, column) => {
       if (startRow === endRow && row === startRow && between(column, startColumn, endColumn)) {
         return color
       } else if (startColumn === endColumn && column === startColumn && between(row, startRow, endRow)) {
@@ -54,7 +54,7 @@ export default function GameBoard({fillColor, colors, setColors, unfilled}) {
       onMouseUp={stopPainting}
     >
       <Board
-        colors={colors}
+        board={board}
         handleSquareClick={handleSquareClick}
         handleSquareHover={handleSquareHover}
       />

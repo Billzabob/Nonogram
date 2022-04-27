@@ -1,12 +1,12 @@
 import Square from './Square.js'
 
-export default function Board({colors, handleSquareClick, handleSquareHover}) {
+export default function Board({board, handleSquareClick, handleSquareHover}) {
 
   function renderSquare(row, column) {
     return (
       <Square
-        key={row * colors.length + column}
-        color={colors[row][column]}
+        key={row * board.length + column}
+        color={board[row][column]}
         row={row}
         column={column}
         handleSquareClick={handleSquareClick}
@@ -15,7 +15,7 @@ export default function Board({colors, handleSquareClick, handleSquareHover}) {
     )
   }
 
-  const grid = colors.map((columns, row) =>
+  const grid = board.map((columns, row) =>
     <div className="board-row" key={row}>
       {columns.map((_color, column) => renderSquare(row, column))}
     </div>
