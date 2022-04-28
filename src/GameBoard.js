@@ -49,16 +49,13 @@ export default function GameBoard({color, board, updateMove, blankColor, startMo
   }
 
   return (
-    <div
+    <Board
+      board={board}
+      handleSquareClick={handleSquareClick}
+      handleSquareHover={handleSquareHover}
       onMouseLeave={stopPainting}
       onMouseUp={stopPainting}
-    >
-      <Board
-        board={board}
-        handleSquareClick={handleSquareClick}
-        handleSquareHover={handleSquareHover}
-      />
-    </div>
+    />
   )
 }
 

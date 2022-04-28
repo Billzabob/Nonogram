@@ -1,9 +1,11 @@
-export default function Game({setColor}) {
+import ColorButton from "./ColorButton"
+
+export default function ColorPicker({setColor}) {
   return (
-    <div>
-      <button onClick={() => setColor('black')}>Black</button>
-      <button onClick={() => setColor('red')}>Red</button>
-      <button onClick={() => setColor('blue')}>Blue</button>
+    <div className='color-picker'>
+      <ColorButton setColor={setColor} color='black'/>
+      <ColorButton setColor={setColor} color='red'/>
+      <ColorButton setColor={setColor} color='blue'/>
     </div>
   )
 }
