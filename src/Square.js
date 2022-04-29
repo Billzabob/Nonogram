@@ -1,11 +1,14 @@
+import React from "react"
 
-export default function Square({ color, row, column, handleSquareClick, handleSquareHover}) {
+const areEqual = (prev, next) => prev.color === next.color
+
+export default React.memo(function Square({ color, row, column, dispatch }) {
   return (
     <button
       className="square"
       style={{ background: color }}
-      onMouseDown={() => handleSquareClick(row, column)}
-      onMouseOver={() => handleSquareHover(row, column)}
+      onMouseDown={() => dispatch({ type: "click", coordinate: [row, column] })}
+      onMouseOver={() => dispatch({ type: "hover", coordinate: [row, column] })}
     />
   )
-}
+}, areEqual)
