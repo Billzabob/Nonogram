@@ -1,9 +1,9 @@
-import NumberList from "./NumberList"
+import Hint from "./Hint"
 
-export default function NumberLists({lists, direction}) {
+export default function Hints({lists, direction}) {
   const values = lists.map((numbers, i) => {
     return (
-      <NumberList
+      <Hint
         key={i}
         numbers={numbers}
         direction={direction}
@@ -12,7 +12,7 @@ export default function NumberLists({lists, direction}) {
   })
 
   return (
-    <div className={'number-lists-' + direction}>
+    <div className={'hints-' + direction}>
       {values}
     </div>
   )

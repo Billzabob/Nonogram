@@ -2,10 +2,11 @@ import { useState } from 'react'
 import GameBoard from './GameBoard.js'
 import ColorPicker from './ColorPicker.js'
 import Undo from './Undo.js'
-import NumberLists from './NumberLists.js'
+import Hints from './Hints.js'
 
 const boardWidth = 10
 const boardHeight = boardWidth
+const defaultColor = 'red'
 const blankColor = 'white'
 
 const level = {
@@ -14,7 +15,7 @@ const level = {
 }
 
 export default function Game() {
-  const [color, setColor] = useState('black')
+  const [color, setColor] = useState(defaultColor)
   const [boards, setBoards] = useState([Array(boardHeight).fill(Array(boardWidth).fill(blankColor))])
 
   function updateMove(color) {
@@ -32,12 +33,11 @@ export default function Game() {
   return (
     <div className='game'>
       <div className='full-board'>
-        <div className='board-row'>
-          <div className='empty'></div>
-          <NumberLists lists={level.rows} direction='row'/>
+        <div className='board-top'>
+          <Hints lists={level.rows} direction='row'/>
         </div>
-        <div className='board-row'>
-          <NumberLists lists={level.columns} direction='column'/>
+        <div className='board-bottom'>
+          <Hints lists={level.columns} direction='column'/>
           <GameBoard
             color={color}
             board={boards[0]}

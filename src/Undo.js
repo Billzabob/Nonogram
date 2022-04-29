@@ -4,7 +4,6 @@ export default function Undo({onClick, disabled}) {
     <button
       className='undo'
       onClick={onClick}
-      disabled={disabled}
-    >Undo</button>
+      disabled={disabled}/>
   )
 }

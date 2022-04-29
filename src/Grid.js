@@ -1,6 +1,6 @@
 import Square from './Square.js'
 
-export default function Board({board, handleSquareClick, handleSquareHover, ...rest}) {
+export default function Grid({board, handleSquareClick, handleSquareHover, ...rest}) {
   function renderSquare(row, column) {
     return (
       <Square
@@ -15,14 +15,14 @@ export default function Board({board, handleSquareClick, handleSquareHover, ...r
   }
 
   const grid = board.map((columns, row) =>
-    <div className="board-row" key={row}>
+    <div className="grid-row" key={row}>
       {columns.map((_color, column) => renderSquare(row, column))}
     </div>
   )
 
   return (
     <div
-      className="game-board"
+      className="grid"
       {...rest}
     >
       {grid}

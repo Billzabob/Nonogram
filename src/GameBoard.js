@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Board from './Board.js'
+import Grid from './Grid.js'
 
 export default function GameBoard({color, board, updateMove, blankColor, startMove}) {
   const [startSquare, setStartSquare] = useState(null)
@@ -49,7 +49,7 @@ export default function GameBoard({color, board, updateMove, blankColor, startMo
   }
 
   return (
-    <Board
+    <Grid
       board={board}
       handleSquareClick={handleSquareClick}
       handleSquareHover={handleSquareHover}
