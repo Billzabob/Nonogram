@@ -5,8 +5,6 @@ import Undo from "./Undo.js"
 import Hints from "./Hints.js"
 import { reducer } from "./GameLogic.js"
 
-const boardWidth = 15
-const boardHeight = boardWidth
 const defaultColor = "red"
 const blankColor = "white"
 
@@ -49,7 +47,11 @@ const level = {
 
 export default function Game() {
   const [state, dispatch] = useReducer(reducer, {
-    boards: [Array(boardHeight).fill(Array(boardWidth).fill(blankColor))],
+    boards: [
+      Array(level.columns.length).fill(
+        Array(level.rows.length).fill(blankColor)
+      ),
+    ],
     color: defaultColor,
     startSquare: null,
     endSquare: null,
@@ -58,7 +60,7 @@ export default function Game() {
 
   return (
     <div className="game" onMouseUp={() => dispatch({ type: "release" })}>
-      <div className="full-board">
+      <div className="board">
         <div className="board-top">
           <Hints lists={level.rows} direction="row" />
         </div>
@@ -72,13 +74,15 @@ export default function Game() {
           />
         </div>
       </div>
-      <ColorPicker
-        setColor={(color) => dispatch({ type: "color", color: color })}
-      />
-      <Undo
-        onClick={() => dispatch({ type: "undo" })}
-        disabled={state.boards.length <= 1}
-      />
+      <div className="buttons">
+        <ColorPicker
+          setColor={(color) => dispatch({ type: "color", color: color })}
+        />
+        <Undo
+          onClick={() => dispatch({ type: "undo" })}
+          disabled={state.boards.length <= 1}
+        />
+      </div>
     </div>
   )
 }
