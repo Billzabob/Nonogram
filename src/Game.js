@@ -7,6 +7,7 @@ import { reducer } from "./GameLogic.js"
 
 const defaultColor = "red"
 const blankColor = "white"
+const segmentSize = 5
 
 const level = {
   rows: [
@@ -71,6 +72,7 @@ export default function Game() {
             color={state.color}
             board={state.boards[0]}
             blankColor={blankColor}
+            segmentSize={segmentSize}
           />
         </div>
       </div>

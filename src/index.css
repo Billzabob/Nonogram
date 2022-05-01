@@ -59,13 +59,26 @@
   width: 20%;
 }
 
+.grid-segment-row {
+  display: flex;
+  height: 100%;
+}
+
+.grid-segment {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 100;
+}
+
 .grid-row {
   display: flex;
   height: 100%;
 }
 
 .grid {
-  border: 0.5px solid black;
+  border: 1px solid black;
   display: flex;
   flex-direction: column;
   width: 80%;

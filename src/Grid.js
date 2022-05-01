@@ -1,21 +1,19 @@
-import Square from "./Square.js"
+import GridSegment from "./GridSegment.js"
 
-export default function Grid({ board, dispatch }) {
-  function renderSquare(row, column) {
-    return (
-      <Square
-        key={row * board.length + column}
-        color={board[row][column]}
-        row={row}
-        column={column}
-        dispatch={dispatch}
-      />
-    )
-  }
+export default function Grid({ board, dispatch, segmentSize }) {
+  const numSegments = board.length / segmentSize
+  const template = [...Array(numSegments).keys()]
 
-  const grid = board.map((columns, row) => (
+  const grid = template.map(row => (
     <div className="grid-row" key={row}>
-      {columns.map((_color, column) => renderSquare(row, column))}
+      {template.map(column =>
+      <GridSegment
+        key={row * numSegments + column}
+        board={board}
+        dispatch={dispatch}
+        segmentIndex={numSegments * row + column}
+        segmentSize={segmentSize}
+      />)}
     </div>
   ))
 
