@@ -1,4 +1,4 @@
-const blankColor = "white"
+const blankColor = "#EAEAEA"
 
 export function reducer(state, action) {
   switch (action.type) {

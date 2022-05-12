@@ -5,8 +5,8 @@ import Undo from "./Undo.js"
 import Hints from "./Hints.js"
 import { reducer } from "./GameLogic.js"
 
-const defaultColor = "red"
-const blankColor = "white"
+const defaultColor = "#FF2E63"
+const blankColor = "#EAEAEA"
 const segmentSize = 5
 
 const level = {
@@ -78,6 +78,7 @@ export default function Game() {
       </div>
       <div className="buttons">
         <ColorPicker
+          activeColor={state.color}
           setColor={(color) => dispatch({ type: "color", color: color })}
         />
         <Undo
