@@ -62,19 +62,15 @@ export default function Game() {
   return (
     <div className="game" onMouseUp={() => dispatch({ type: "release" })}>
       <div className="board">
-        <div className="board-top">
-          <Hints lists={level.rows} direction="row" />
-        </div>
-        <div className="board-bottom">
-          <Hints lists={level.columns} direction="column" />
-          <Grid
-            dispatch={dispatch}
-            color={state.color}
-            board={state.boards[0]}
-            blankColor={blankColor}
-            segmentSize={segmentSize}
-          />
-        </div>
+        <Hints lists={level.rows} direction="row" />
+        <Hints lists={level.columns} direction="column" />
+        <Grid
+          dispatch={dispatch}
+          color={state.color}
+          board={state.boards[0]}
+          blankColor={blankColor}
+          segmentSize={segmentSize}
+        />
       </div>
       <div className="buttons">
         <ColorPicker

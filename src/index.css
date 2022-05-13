@@ -1,5 +1,4 @@
 .color-picker {
-  height: 100%;
   display: flex;
   align-items: center;
   align-content: stretch;
@@ -25,9 +24,8 @@
 
 .square {
   border: 0.5px solid #252A34;
-  height: 100%;
   padding: 0;
-  width: 100%;
+  flex: 1;
 }
 
 .hint-row {
@@ -35,29 +33,28 @@
   display: flex;
   flex-direction: column;
   font-size: 30px;
-  height: 100%;
   justify-content: space-evenly;
   padding: 0;
   text-align: center;
-  width: 100%;
+  flex: 1;
 }
 
 .hint-column {
   align-items: center;
   border: 0.5px solid #252A34;
   display: flex;
-  height: 80%;
   justify-content: space-evenly;
   padding: 0;
   text-align: center;
-  width: 100%;
+  flex: 1;
 }
 
 .hints-row {
   border: 0.5px solid #252A34;
   display: flex;
   margin-bottom: -2px;
-  width: 80%;
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .hints-column {
@@ -65,49 +62,39 @@
   display: flex;
   flex-direction: column;
   margin-right: -2px;
-  width: 20%;
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .grid-segment-row {
   display: flex;
-  height: 100%;
+  flex: 1;
 }
 
 .grid-segment {
   border: 1px solid #252A34;
   display: flex;
   flex-direction: column;
-  width: 80%;
-  height: 100;
+  flex: 1;
 }
 
 .grid-row {
   display: flex;
-  height: 100%;
+  flex: 1;
 }
 
 .grid {
   border: 1px solid #252A34;
   display: flex;
   flex-direction: column;
-  width: 80%;
-  height: 100;
-}
-
-.board-top {
-  display: flex;
-  justify-content: flex-end;
-  height: 20%;
-}
-
-.board-bottom {
-  display: flex;
-  height: 80%;
+  grid-column: 2;
+  grid-row: 2;
 }
 
 .board {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  grid-template-rows: 1fr 4fr;
   aspect-ratio: 1;
 }
 
@@ -123,7 +110,6 @@
 
 .buttons {
   display: flex;
-  width: 100%;
   height: 20%;
   justify-content: center;
   align-items: center;
